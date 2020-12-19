@@ -1,7 +1,7 @@
-DROP DATABASE techniques_web;
-CREATE DATABASE IF NOT EXISTS Techniques_web;
+DROP DATABASE IF EXISTS MyDB;
+CREATE DATABASE IF NOT EXISTS MyDB;
 
-USE Techniques_web;
+USE MyDB;
 
 CREATE TABLE IF NOT EXISTS qcm(
 	qcmid INT not null PRIMARY KEY,
@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS question(
     qcmid INT not null,
     text varchar(100),
     FOREIGN KEY (qcmid)
-        REFERENCES Techniques_web.qcm (qcmid)
+        REFERENCES MyDB.qcm (qcmid)
 );
 
 CREATE TABLE IF NOT EXISTS answer(
@@ -21,10 +21,12 @@ CREATE TABLE IF NOT EXISTS answer(
     questid INT not null,
     text varchar(100),
     FOREIGN KEY (questid)
-        REFERENCES Techniques_web.question (questid)
+        REFERENCES MyDB.question (questid)
 );
 
-CREATE TABLE IF NOT EXISTS user(
+ALTER TABLE `answer` ADD `correct_answ` TINYINT(1) NOT NULL AFTER `text`;
+
+CREATE TABLE IF NOT EXISTS users(
 	userid INT not null PRIMARY KEY,
     name varchar(30) not null,
     pwd varchar(30) not null,
@@ -32,15 +34,15 @@ CREATE TABLE IF NOT EXISTS user(
 );
 
 CREATE TABLE IF NOT EXISTS exam(
-	examid INT not null PRIMARY KEY,
+	examid INT not null PRIMARY KEY AUTO_INCREMENT,
     userid INT not null,
     qcmid INT not null,
     status varchar(10) not null,
     result INT not null,
     FOREIGN KEY (userid)
-        REFERENCES Techniques_web.user (userid), 
+        REFERENCES MyDB.users (userid), 
 	FOREIGN KEY (qcmid)
-        REFERENCES Techniques_web.qcm (qcmid)
+        REFERENCES MyDB.qcm (qcmid)
 );
 
 CREATE TABLE IF NOT EXISTS exam_line(
@@ -50,9 +52,9 @@ CREATE TABLE IF NOT EXISTS exam_line(
     answid INT not null,
     result INT not null,
     FOREIGN KEY (examid)
-        REFERENCES Techniques_web.exam (examid),
+        REFERENCES MyDB.exam (examid),
 	FOREIGN KEY (questid)
-        REFERENCES Techniques_web.question (questid),
+        REFERENCES MyDB.question (questid),
 	FOREIGN KEY (answid)
-        REFERENCES Techniques_web.answer (answid)
+        REFERENCES MyDB.answer (answid)
 );
